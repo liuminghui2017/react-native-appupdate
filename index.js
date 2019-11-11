@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs';
 
 const RNAppUpdate = NativeModules.RNAppUpdate;
 
-const jobId = -1;
+let jobId = -1;
 
 class AppUpdate {
   constructor(options) {
@@ -67,30 +67,33 @@ class AppUpdate {
       this.options.downloadApkStart && this.options.downloadApkStart();
     };
     const progressDivider = 1;
-    const downloadDestPath = `${RNFS.DocumentDirectoryPath}/NewApp.apk`;
-
-    const ret = RNFS.downloadFile({
-      fromUrl: remote.apkUrl,
-      toFile: downloadDestPath,
-      begin,
-      progress,
-      background: true,
-      progressDivider
-    });
-
-    jobId = ret.jobId;
-
-    ret.promise.then((res) => {
-      console.log("downloadApkEnd");
-      this.options.downloadApkEnd && this.options.downloadApkEnd();
-      RNAppUpdate.installApk(downloadDestPath);
-
-      jobId = -1;
-    }).catch((err) => {
-      this.downloadApkError(err);
-
-      jobId = -1;
-    });
+    const path = 'upgrade.apk'
+    const downloadDestPath = `${RNFS.ExternalDirectoryPath}/${path}`;
+    
+    setTimeout(() => {
+      const ret = RNFS.downloadFile({
+        fromUrl: remote.apkUrl,
+        toFile: downloadDestPath,
+        begin,
+        progress,
+        background: true,
+        progressDivider
+      });
+  
+      jobId = ret.jobId;
+  
+      ret.promise.then((res) => {
+        console.log("downloadApkEnd");
+        this.options.downloadApkEnd && this.options.downloadApkEnd();
+        RNAppUpdate.installApk(downloadDestPath);
+  
+        jobId = -1;
+      }).catch((err) => {
+        this.downloadApkError(err);
+  
+        jobId = -1;
+      });
+    }, 5000);
   }
 
   getAppStoreVersion() {
