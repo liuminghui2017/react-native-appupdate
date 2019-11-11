@@ -1,22 +1,32 @@
 # React Native AppUpdate
-Update apk and update from app store in React Native.
+原生程序下载更新插件
 
-## Installation
-```bash
-npm install react-native-appupdate --save
+## 配置
+### Android
+#### 1.在AndroidManifest.xml中的application节点下添加provider:
+```xml
+<provider
+  android:name="android.support.v4.content.FileProvider"
+  android:authorities="${applicationId}.fileProvider"
+  android:exported="false"
+  android:grantUriPermissions="true">
+  <meta-data
+      android:name="android.support.FILE_PROVIDER_PATHS"
+      android:resource="@xml/file_paths"/>
+</provider>
 ```
-**Note: If your react-native version < 0.40**
 
-```bash
-npm install react-native-appupdate@1.0.5 --save
+#### 2.在res目录下，新建目录xml，并在xml目录下新建文件file_paths.xml，内容如下:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path path="" name="updateDemo" />
+</paths>
 ```
 
-adding automatically with react-native link
+## 更新
+适配android 7.0以上的StrictMode API 政策，使用FileProvider来安装apk文件
 
-```bash
-react-native link react-native-appupdate
-react-native link react-native-fs
-```
 ## Usage
 ```javascript
 import { Alert } from 'react-native';

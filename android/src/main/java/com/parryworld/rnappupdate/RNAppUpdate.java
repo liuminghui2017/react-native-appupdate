@@ -13,6 +13,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.os.Environment;
+import android.widget.Toast;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
+
 /**
  * Created by parryworld on 2016/11/18.
  */
@@ -48,16 +53,36 @@ public class RNAppUpdate extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void installApk(String file) {
-        String cmd = "chmod 777 " + file;
-        try {
-            Runtime.getRuntime().exec(cmd);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void installApk(String apkPath) {
+        if (isEmpty(apkPath)) {
+            Toast.makeText(getReactApplicationContext(), "apkPath is null", 3000).show();
+            return;
         }
+
+        File file = new File(apkPath);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + file), "application/vnd.android.package-archive");
+        // 由于没有在Activity环境下启动Activity,设置下面的标签
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 24) { //判断版本是否在7.0以上
+            //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致  参数3 共享的文件
+            Uri apkUri = FileProvider.getUriForFile(getReactApplicationContext(), getReactApplicationContext().getPackageName() +
+                    ".fileProvider", file);
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        }
+        // Toast.makeText(getReactApplicationContext(), getReactApplicationContext().getPackageName(), 3000).show();
         getCurrentActivity().startActivity(intent);
+    }
+
+    public boolean isEmpty(String value) {
+        if (value != null && !"".equalsIgnoreCase(value.trim())
+                && !"null".equalsIgnoreCase(value.trim())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
