@@ -1,31 +1,10 @@
 # React Native AppUpdate
 原生程序下载更新插件
 
-## 配置
-### Android
-#### 1.在AndroidManifest.xml中的application节点下添加provider:
-```xml
-<provider
-  android:name="android.support.v4.content.FileProvider"
-  android:authorities="${applicationId}.fileProvider"
-  android:exported="false"
-  android:grantUriPermissions="true">
-  <meta-data
-      android:name="android.support.FILE_PROVIDER_PATHS"
-      android:resource="@xml/file_paths"/>
-</provider>
-```
-
-#### 2.在res目录下，新建目录xml，并在xml目录下新建文件file_paths.xml，内容如下:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <external-path path="" name="updateDemo" />
-</paths>
-```
 
 ## 更新
-适配android 7.0以上的StrictMode API 政策，使用FileProvider来安装apk文件
+适配android 7.0以上的StrictMode API 政策，使用FileProvider来安装apk文件;
+解决FileProvider与三方插件重复问题;
 
 ## Usage
 ```javascript
