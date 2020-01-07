@@ -52,7 +52,7 @@ downloadAndInstall() {
 ```javascript
 import AppUpdate from 'react-native-appupdate';
 
-AppUpdate.installFromAppStore();
+AppUpdate.installFromAppStore(iosAppId);
 ```
 
 ```javascript
