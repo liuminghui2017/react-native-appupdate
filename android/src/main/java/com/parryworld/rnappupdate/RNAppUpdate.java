@@ -16,16 +16,16 @@ import java.util.Map;
 import android.os.Environment;
 import android.widget.Toast;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
-import android.support.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.annotation.NonNull;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.Manifest;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 /**
  * Created by parryworld on 2016/11/18.
